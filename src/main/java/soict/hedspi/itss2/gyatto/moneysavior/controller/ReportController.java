@@ -23,7 +23,7 @@ public class ReportController {
     private final ReportService reportService;
 
     @GetMapping("/reports/overview")
-    @Operation()
+    @Operation(summary = "Tổng quan số dư, tổng thu, tổng chi")
     public ResponseEntity<GetOverviewResponse> getOverview(
             @RequestParam String userUuid,
             @RequestParam LocalDate startDate,
