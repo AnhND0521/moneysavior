@@ -1,5 +1,6 @@
 package soict.hedspi.itss2.gyatto.moneysavior.repository;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -63,4 +64,31 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             ORDER BY t.date DESC, t.createdAt DESC
             """)
     List<Transaction> findTransactionHistoryByUser(String userUuid, TransactionType type, String categoryName, int year, int month);
+
+    @Query("""
+            SELECT IFNULL(SUM(t.amount), 0)
+            FROM Transaction t
+            WHERE t.userUuid = :userUuid
+                AND t.type = :type
+                AND t.date BETWEEN :startDate AND :endDate
+            """)
+    BigDecimal findTransactionAmountByPeriod(String userUuid, TransactionType type, LocalDate startDate, LocalDate endDate);
+
+    @Query("""
+            SELECT t
+            FROM Transaction t
+            WHERE t.userUuid = :userUuid
+                AND t.type = :type
+                AND t.date BETWEEN :startDate AND :endDate
+            ORDER BY t.amount || :sortDirection
+            LIMIT :limit
+            """)
+    List<Transaction> findTopTransactionsByPeriod(
+            String userUuid,
+            TransactionType type,
+            LocalDate startDate,
+            LocalDate endDate,
+            String sortDirection,
+            int limit
+    );
 }

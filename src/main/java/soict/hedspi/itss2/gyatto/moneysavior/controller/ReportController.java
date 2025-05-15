@@ -7,10 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import soict.hedspi.itss2.gyatto.moneysavior.dto.report.CategorySummaryResult;
-import soict.hedspi.itss2.gyatto.moneysavior.dto.report.GetCategorySummaryRequest;
-import soict.hedspi.itss2.gyatto.moneysavior.dto.report.GetOverviewRequest;
-import soict.hedspi.itss2.gyatto.moneysavior.dto.report.GetOverviewResponse;
+import soict.hedspi.itss2.gyatto.moneysavior.common.enums.TransactionType;
+import soict.hedspi.itss2.gyatto.moneysavior.dto.report.*;
 import soict.hedspi.itss2.gyatto.moneysavior.service.ReportService;
 
 import java.time.LocalDate;
@@ -53,5 +51,22 @@ public class ReportController {
                 .endDate(endDate)
                 .build();
         return ResponseEntity.ok(reportService.getCategorySummary(request));
+    }
+
+    @GetMapping("/reports/transaction-summary-by-period")
+    @Operation(
+            summary = "Thống kê giao dịch theo từng khoảng thời gian"
+    )
+    public ResponseEntity<GetTransactionSummaryByPeriodResponse> getTransactionSummaryByPeriod(
+            @RequestParam String userUuid,
+            @RequestParam TransactionType transactionType,
+            @RequestParam GetTransactionSummaryByPeriodRequest.SummaryType summaryType
+            ) {
+        var request = GetTransactionSummaryByPeriodRequest.builder()
+                .userUuid(userUuid)
+                .transactionType(transactionType)
+                .summaryType(summaryType)
+                .build();
+        return ResponseEntity.ok(reportService.getTransactionSummaryByPeriod(request));
     }
 }
