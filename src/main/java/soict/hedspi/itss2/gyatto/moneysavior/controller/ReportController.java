@@ -55,7 +55,8 @@ public class ReportController {
 
     @GetMapping("/reports/transaction-summary-by-period")
     @Operation(
-            summary = "Thống kê giao dịch theo từng khoảng thời gian"
+            summary = "Thống kê giao dịch theo từng khoảng thời gian",
+            description = "Lấy period làm nhãn trục hoành và amount làm giá trị trục tung. Dùng startDate và endDate để lấy top transactions ứng với cột mà người dùng chọn."
     )
     public ResponseEntity<GetTransactionSummaryByPeriodResponse> getTransactionSummaryByPeriod(
             @RequestParam String userUuid,

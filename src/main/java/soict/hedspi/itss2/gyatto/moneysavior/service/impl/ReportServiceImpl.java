@@ -138,6 +138,8 @@ public class ReportServiceImpl implements ReportService {
                     return TransactionSummaryByPeriodResult.builder()
                             .period(labelConverter.apply(dateRange))
                             .amount(amount)
+                            .startDate(dateRange.getFirst())
+                            .endDate(dateRange.getSecond())
                             .build();
                 }).toList();
 
