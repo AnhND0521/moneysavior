@@ -38,12 +38,15 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public List<CategorySummaryResult> getCategorySummary(GetCategorySummaryRequest request) {
-        return transactionRepository.findCategorySummaryByUserUuid(
+    public GetCategorySummaryResponse getCategorySummary(GetCategorySummaryRequest request) {
+        var data = transactionRepository.findCategorySummaryByUserUuid(
                 request.getUserUuid(),
                 request.getStartDate(),
                 request.getEndDate()
         );
+        return GetCategorySummaryResponse.builder()
+                .data(data)
+                .build();
     }
 
     @Override

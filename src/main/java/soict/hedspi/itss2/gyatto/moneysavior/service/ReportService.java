@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface ReportService {
     GetOverviewResponse getOverview(GetOverviewRequest request);
-    List<CategorySummaryResult> getCategorySummary(GetCategorySummaryRequest request);
+    GetCategorySummaryResponse getCategorySummary(GetCategorySummaryRequest request);
     GetTransactionSummaryByPeriodResponse getTransactionSummaryByPeriod(GetTransactionSummaryByPeriodRequest request);
 }

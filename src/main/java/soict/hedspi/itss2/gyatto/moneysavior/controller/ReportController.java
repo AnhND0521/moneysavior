@@ -40,7 +40,7 @@ public class ReportController {
             summary = "Thống kê chi tiêu theo từng danh mục",
             description = "startDate và endDate định dạng yyyy-MM-dd (ví dụ: 2025-05-01). Trả về list thông số mỗi danh mục gồm categoryName (tên danh mục), totalAmount (tổng chi của danh mục đó) và percentage (phần trăm của danh mục đó so với tổng chi)."
     )
-    public ResponseEntity<List<CategorySummaryResult>> getCategorySummary(
+    public ResponseEntity<GetCategorySummaryResponse> getCategorySummary(
             @RequestParam String userUuid,
             @RequestParam LocalDate startDate,
             @RequestParam LocalDate endDate
