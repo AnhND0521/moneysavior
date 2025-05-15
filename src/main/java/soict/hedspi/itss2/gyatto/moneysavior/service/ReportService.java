@@ -8,4 +8,5 @@ public interface ReportService {
     GetOverviewResponse getOverview(GetOverviewRequest request);
     GetCategorySummaryResponse getCategorySummary(GetCategorySummaryRequest request);
     GetTransactionSummaryByPeriodResponse getTransactionSummaryByPeriod(GetTransactionSummaryByPeriodRequest request);
+    GetTopTransactionsResponse getTopTransactions(GetTopTransactionsRequest request);
 }

@@ -2,6 +2,8 @@ package soict.hedspi.itss2.gyatto.moneysavior.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import soict.hedspi.itss2.gyatto.moneysavior.common.enums.TransactionType;
@@ -148,6 +150,22 @@ public class ReportServiceImpl implements ReportService {
 
         return GetTransactionSummaryByPeriodResponse.builder()
                 .data(data)
+                .build();
+    }
+
+    @Override
+    public GetTopTransactionsResponse getTopTransactions(GetTopTransactionsRequest request) {
+        var transactions = transactionRepository.findTransactionsByPeriod(
+                        request.getUserUuid(),
+                        request.getTransactionType(),
+                        request.getStartDate(),
+                        request.getEndDate(),
+                        PageRequest.of(0, request.getLimit(), Sort.by(request.getSortDirection(), "amount"))
+                ).stream()
+                .map(transactionMapper::toTransactionResponse)
+                .toList();
+        return GetTopTransactionsResponse.builder()
+                .transactions(transactions)
                 .build();
     }
 }

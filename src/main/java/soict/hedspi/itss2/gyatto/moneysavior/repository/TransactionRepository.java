@@ -80,15 +80,12 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             WHERE t.userUuid = :userUuid
                 AND t.type = :type
                 AND t.date BETWEEN :startDate AND :endDate
-            ORDER BY t.amount || :sortDirection
-            LIMIT :limit
             """)
-    List<Transaction> findTopTransactionsByPeriod(
+    List<Transaction> findTransactionsByPeriod(
             String userUuid,
             TransactionType type,
             LocalDate startDate,
             LocalDate endDate,
-            String sortDirection,
-            int limit
+            Pageable pageable
     );
 }
