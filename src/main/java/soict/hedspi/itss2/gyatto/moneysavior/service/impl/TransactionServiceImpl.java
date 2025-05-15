@@ -178,6 +178,15 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    public TransactionResponse deleteTransaction(String uuid) {
+        var transaction = transactionRepository.findByUuid(uuid)
+                .orElseThrow(() -> apiExceptionProvider.createTransactionNotFoundException(uuid));
+        chatHistoryRepository.deleteAllByTransaction(transaction);
+        transactionRepository.delete(transaction);
+        return transactionMapper.toTransactionResponse(transaction);
+    }
+
+    @Override
     public List<TransactionResponse> getTransactionHistory(GetTransactionHistoryRequest request) {
         return transactionRepository.findTransactionHistoryByUser(
                         request.getUserUuid(),

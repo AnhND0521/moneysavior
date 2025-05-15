@@ -9,5 +9,6 @@ public interface TransactionService {
     RecordTransactionResponse recordTransactionAuto(RecordTransactionAutoRequest request);
     GetCommentOnNewestTransactionResponse getCommentOnNewestTransaction(String userUuid);
     TransactionResponse updateTransaction(String uuid, UpdateTransactionRequest request);
+    TransactionResponse deleteTransaction(String uuid);
     List<TransactionResponse> getTransactionHistory(GetTransactionHistoryRequest request);
 }

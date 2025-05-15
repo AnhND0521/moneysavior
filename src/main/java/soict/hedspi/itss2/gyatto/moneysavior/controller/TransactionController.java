@@ -50,6 +50,12 @@ public class TransactionController {
         return ResponseEntity.ok(transactionService.updateTransaction(uuid, request));
     }
 
+    @DeleteMapping("/transactions/{uuid}")
+    @Operation(summary = "Xóa giao dịch")
+    public ResponseEntity<TransactionResponse> deleteTransaction(@PathVariable String uuid) {
+        return ResponseEntity.ok(transactionService.deleteTransaction(uuid));
+    }
+
     @GetMapping("/transactions")
     @Operation(
             summary = "Lấy lịch sử giao dịch",
