@@ -35,3 +35,6 @@ build/
 ### Application config ###
 application-local.yml
 application-secrets.yml
+
+### Prevent auto-detect Dockerfile on deployment ###
+Dockerfile
