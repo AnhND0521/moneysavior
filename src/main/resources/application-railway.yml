@@ -3,9 +3,9 @@ server:
 
 spring:
   datasource:
-    url: mysql://root:LahOWsZXaycIENFRUQEtQaxFEZPFuKYA@mysql.railway.internal:3306/railway?serverTimezone=Asia/Ho_Chi_Minh
-    username: root
-    password: LahOWsZXaycIENFRUQEtQaxFEZPFuKYA
+    url: #Import from Railway variables
+    username: #Import from Railway variables
+    password: #Import from Railway variables
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
