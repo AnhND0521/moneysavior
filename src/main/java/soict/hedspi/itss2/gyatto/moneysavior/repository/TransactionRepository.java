@@ -55,10 +55,10 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     @Query("""
             SELECT t
-            FROM Transaction t JOIN t.category c
+            FROM Transaction t LEFT JOIN t.category c
             WHERE t.userUuid = :userUuid
                 AND (:type IS NULL OR t.type = :type)
-                AND (:categoryName IS NULL OR c.name = :categoryName)
+                AND (:type = 'INCOME' OR :categoryName IS NULL OR c.name = :categoryName)
                 AND EXTRACT(YEAR FROM t.date) = :year
                 AND EXTRACT(MONTH FROM t.date) = :month
             ORDER BY t.date DESC, t.createdAt DESC
