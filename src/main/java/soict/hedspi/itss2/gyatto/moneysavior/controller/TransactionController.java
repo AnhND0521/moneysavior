@@ -78,4 +78,10 @@ public class TransactionController {
                 .build();
         return ResponseEntity.ok(transactionService.getTransactionHistory(request));
     }
+
+    @PostMapping("/transactions/hooks/sepay")
+    @Operation(summary = "Webhook từ Sepay")
+    public ResponseEntity<SepayWebhookResponse> handleSepayWebhook(@RequestBody @Valid SepayWebhookRequest request) {
+        return ResponseEntity.ok(transactionService.handleSepayWebhook(request));
+    }
 }

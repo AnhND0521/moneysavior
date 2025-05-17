@@ -11,4 +11,5 @@ public interface TransactionService {
     TransactionResponse updateTransaction(String uuid, UpdateTransactionRequest request);
     TransactionResponse deleteTransaction(String uuid);
     List<TransactionResponse> getTransactionHistory(GetTransactionHistoryRequest request);
+    SepayWebhookResponse handleSepayWebhook(SepayWebhookRequest request);
 }
