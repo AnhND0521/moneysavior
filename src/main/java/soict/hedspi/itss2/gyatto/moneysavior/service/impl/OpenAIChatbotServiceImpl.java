@@ -6,7 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import soict.hedspi.itss2.gyatto.moneysavior.dto.chatbot.*;
 import soict.hedspi.itss2.gyatto.moneysavior.feign.OpenAIFeignClient;
+import soict.hedspi.itss2.gyatto.moneysavior.mapper.ChatbotMapper;
+import soict.hedspi.itss2.gyatto.moneysavior.repository.ChatHistoryRepository;
 import soict.hedspi.itss2.gyatto.moneysavior.service.ChatbotService;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -15,6 +19,8 @@ public class OpenAIChatbotServiceImpl implements ChatbotService {
     private final OpenAIFeignClient openAIFeignClient;
     private final OpenAIRequestFactory openAIRequestFactory;
     private final ObjectMapper objectMapper;
+    private final ChatHistoryRepository chatHistoryRepository;
+    private final ChatbotMapper chatbotMapper;
 
     @Override
     public CategorizeTransactionResult categorizeTransaction(CategorizeTransactionPrompt prompt) {
@@ -34,5 +40,13 @@ public class OpenAIChatbotServiceImpl implements ChatbotService {
         var request = openAIRequestFactory.createRequest(prompt);
         var response = openAIFeignClient.getResponse(request);
         return response.getText();
+    }
+
+    @Override
+    public List<ChatHistoryResponse> getChatHistory(String userUuid) {
+        return chatHistoryRepository.findAllByUserUuidOrderByCreatedAtAsc(userUuid)
+                .stream()
+                .map(chatbotMapper::toChatHistoryResponse)
+                .toList();
     }
 }

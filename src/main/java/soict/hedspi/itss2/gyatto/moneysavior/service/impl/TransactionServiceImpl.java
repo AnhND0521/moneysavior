@@ -16,6 +16,7 @@ import soict.hedspi.itss2.gyatto.moneysavior.mapper.TransactionMapper;
 import soict.hedspi.itss2.gyatto.moneysavior.repository.ChatHistoryRepository;
 import soict.hedspi.itss2.gyatto.moneysavior.repository.ExpenseCategoryRepository;
 import soict.hedspi.itss2.gyatto.moneysavior.repository.TransactionRepository;
+import soict.hedspi.itss2.gyatto.moneysavior.repository.UserAccountRepository;
 import soict.hedspi.itss2.gyatto.moneysavior.service.ChatbotService;
 import soict.hedspi.itss2.gyatto.moneysavior.service.TransactionService;
 
@@ -30,6 +31,7 @@ public class TransactionServiceImpl implements TransactionService {
     private final ExpenseCategoryRepository expenseCategoryRepository;
     private final TransactionRepository transactionRepository;
     private final ChatHistoryRepository chatHistoryRepository;
+    private final UserAccountRepository userAccountRepository;
     private final ApiExceptionProvider apiExceptionProvider;
     private final TransactionMapper transactionMapper;
 
@@ -178,6 +180,15 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    public TransactionResponse deleteTransaction(String uuid) {
+        var transaction = transactionRepository.findByUuid(uuid)
+                .orElseThrow(() -> apiExceptionProvider.createTransactionNotFoundException(uuid));
+        chatHistoryRepository.deleteAllByTransaction(transaction);
+        transactionRepository.delete(transaction);
+        return transactionMapper.toTransactionResponse(transaction);
+    }
+
+    @Override
     public List<TransactionResponse> getTransactionHistory(GetTransactionHistoryRequest request) {
         return transactionRepository.findTransactionHistoryByUser(
                         request.getUserUuid(),
@@ -189,5 +200,21 @@ public class TransactionServiceImpl implements TransactionService {
                 .stream()
                 .map(transactionMapper::toTransactionResponse)
                 .toList();
+    }
+
+    @Override
+    public SepayWebhookResponse handleSepayWebhook(SepayWebhookRequest request) {
+        log.info("Sepay webhook request body: {}", request);
+        var defaultUser = userAccountRepository.findFirstByEmail("nguyenducanh2105@gmail.com");
+        if (defaultUser != null) {
+            var recordTransactionAutoRequest = RecordTransactionAutoRequest.builder()
+                    .userUuid(defaultUser.getUuid())
+                    .message((request.getTransferType().equals("in") ? "nhận được" : "chi tiêu") + ": " + request.getContent() + ", " + request.getTransferAmount() + " VND")
+                    .build();
+            recordTransactionAuto(recordTransactionAutoRequest);
+        }
+        return SepayWebhookResponse.builder()
+                .success(true)
+                .build();
     }
 }

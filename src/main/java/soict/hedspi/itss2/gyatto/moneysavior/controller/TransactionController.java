@@ -50,6 +50,12 @@ public class TransactionController {
         return ResponseEntity.ok(transactionService.updateTransaction(uuid, request));
     }
 
+    @DeleteMapping("/transactions/{uuid}")
+    @Operation(summary = "Xóa giao dịch")
+    public ResponseEntity<TransactionResponse> deleteTransaction(@PathVariable String uuid) {
+        return ResponseEntity.ok(transactionService.deleteTransaction(uuid));
+    }
+
     @GetMapping("/transactions")
     @Operation(
             summary = "Lấy lịch sử giao dịch",
@@ -71,5 +77,11 @@ public class TransactionController {
                 .month(month)
                 .build();
         return ResponseEntity.ok(transactionService.getTransactionHistory(request));
+    }
+
+    @PostMapping("/transactions/hooks/sepay")
+    @Operation(summary = "Webhook từ Sepay")
+    public ResponseEntity<SepayWebhookResponse> handleSepayWebhook(@RequestBody @Valid SepayWebhookRequest request) {
+        return ResponseEntity.ok(transactionService.handleSepayWebhook(request));
     }
 }

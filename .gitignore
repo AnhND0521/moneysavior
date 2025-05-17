@@ -33,4 +33,5 @@ build/
 .vscode/
 
 ### Application config ###
-application*.yml
+application-local.yml
+application-secrets.yml
