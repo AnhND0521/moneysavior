@@ -1,0 +1,17 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:mysql://mysqldb:3306/moneysavior?serverTimezone=Asia/Ho_Chi_Minh
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update # Hoặc create, create-drop, validate
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
