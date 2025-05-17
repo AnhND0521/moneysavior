@@ -10,3 +10,8 @@ spring:
 springdoc:
   swagger-ui:
     path: /
+
+openai:
+  api:
+    url: https://api.openai.com
+    model: gpt-4.1-nano-2025-04-14
