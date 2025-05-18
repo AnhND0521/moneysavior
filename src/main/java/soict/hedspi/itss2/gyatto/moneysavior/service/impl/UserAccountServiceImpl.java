@@ -9,6 +9,8 @@ import soict.hedspi.itss2.gyatto.moneysavior.entity.UserAccount;
 import soict.hedspi.itss2.gyatto.moneysavior.repository.UserAccountRepository;
 import soict.hedspi.itss2.gyatto.moneysavior.service.UserAccountService;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -29,5 +31,13 @@ public class UserAccountServiceImpl implements UserAccountService {
                 .userUuid(user.getUuid())
                 .fullName(user.getFullName())
                 .build();
+    }
+
+    @Override
+    public List<String> getSampleAccounts() {
+        return userAccountRepository.findAllThatExistTransactions()
+                .stream()
+                .map(UserAccount::getEmail)
+                .toList();
     }
 }
