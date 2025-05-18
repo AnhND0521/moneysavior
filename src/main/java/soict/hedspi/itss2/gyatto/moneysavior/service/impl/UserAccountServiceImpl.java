@@ -21,11 +21,10 @@ public class UserAccountServiceImpl implements UserAccountService {
     public FakeLoginResponse fakeLogin(FakeLoginRequest request) {
         var user = userAccountRepository.findFirstByEmail(request.getEmail());
         if (user == null) {
-            user = UserAccount.builder()
-                    .email(request.getEmail())
-                    .fullName("Người dùng mới")
+            return FakeLoginResponse.builder()
+                    .userUuid(null)
+                    .fullName(null)
                     .build();
-            userAccountRepository.save(user);
         }
         return FakeLoginResponse.builder()
                 .userUuid(user.getUuid())
