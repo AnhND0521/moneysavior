@@ -6,7 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import soict.hedspi.itss2.gyatto.moneysavior.dto.useraccount.FakeLoginRequest;
-import soict.hedspi.itss2.gyatto.moneysavior.dto.useraccount.FakeLoginResponse;
+import soict.hedspi.itss2.gyatto.moneysavior.dto.useraccount.FakeSignUpRequest;
+import soict.hedspi.itss2.gyatto.moneysavior.dto.useraccount.UserAccountResponse;
 import soict.hedspi.itss2.gyatto.moneysavior.service.UserAccountService;
 
 import java.util.List;
@@ -19,8 +20,14 @@ public class UserAccountController {
 
     @PostMapping("/accounts:fake-login")
     @Operation(summary = "Giả lập login ảo, nhập email là lấy được userUuid để dùng mấy api khác")
-    public ResponseEntity<FakeLoginResponse> fakeLogin(@RequestBody @Valid FakeLoginRequest request) {
+    public ResponseEntity<UserAccountResponse> fakeLogin(@RequestBody @Valid FakeLoginRequest request) {
         return ResponseEntity.ok(userAccountService.fakeLogin(request));
+    }
+
+    @PostMapping("/accounts:fake-sign-up")
+    @Operation(summary = "Giả lập đăng ký tài khoản, nhập email và fullName là có tài khoản và lấy được userUuid để dùng mấy api khác")
+    public ResponseEntity<UserAccountResponse> fakeSignUp(@RequestBody @Valid FakeSignUpRequest request) {
+        return ResponseEntity.ok(userAccountService.fakeSignUp(request));
     }
 
     @GetMapping("/accounts")

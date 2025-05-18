@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class FakeLoginResponse {
+public class UserAccountResponse {
     private String userUuid;
     private String fullName;
 }
