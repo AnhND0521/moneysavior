@@ -120,6 +120,7 @@ public class TransactionServiceImpl implements TransactionService {
                         .description(request.getDescription())
                         .amount(request.getAmount())
                         .category(category)
+                        .date(request.getDate())
                         .build();
                 return transactionRepository.save(transaction);
             }
@@ -129,6 +130,7 @@ public class TransactionServiceImpl implements TransactionService {
                         .type(request.getType())
                         .description(request.getDescription())
                         .amount(request.getAmount())
+                        .date(request.getDate())
                         .build();
                 return transactionRepository.save(transaction);
             }
@@ -200,6 +202,13 @@ public class TransactionServiceImpl implements TransactionService {
                 .stream()
                 .map(transactionMapper::toTransactionResponse)
                 .toList();
+    }
+
+    @Override
+    public TransactionResponse getTransactionDetails(String uuid) {
+        var transaction = transactionRepository.findByUuid(uuid)
+                .orElseThrow(() -> apiExceptionProvider.createTransactionNotFoundException(uuid));
+        return transactionMapper.toTransactionResponse(transaction);
     }
 
     @Override

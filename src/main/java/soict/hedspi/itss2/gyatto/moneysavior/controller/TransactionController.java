@@ -79,6 +79,12 @@ public class TransactionController {
         return ResponseEntity.ok(transactionService.getTransactionHistory(request));
     }
 
+    @GetMapping("/transactions/{uuid}")
+    @Operation(summary = "Lấy thông tin chi tiết giao dịch")
+    public ResponseEntity<TransactionResponse> getTransactionDetails(@PathVariable String uuid) {
+        return ResponseEntity.ok(transactionService.getTransactionDetails(uuid));
+    }
+
     @PostMapping("/transactions/hooks/sepay")
     @Operation(summary = "Webhook từ Sepay")
     public ResponseEntity<SepayWebhookResponse> handleSepayWebhook(@RequestBody @Valid SepayWebhookRequest request) {
