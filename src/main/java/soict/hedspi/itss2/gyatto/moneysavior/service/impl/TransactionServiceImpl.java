@@ -2,7 +2,6 @@ package soict.hedspi.itss2.gyatto.moneysavior.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import soict.hedspi.itss2.gyatto.moneysavior.dto.chatbot.CategorizeTransactionPrompt;
 import soict.hedspi.itss2.gyatto.moneysavior.dto.chatbot.CommentOnTransactionPrompt;
@@ -10,7 +9,6 @@ import soict.hedspi.itss2.gyatto.moneysavior.dto.transaction.*;
 import soict.hedspi.itss2.gyatto.moneysavior.entity.ChatHistory;
 import soict.hedspi.itss2.gyatto.moneysavior.entity.ExpenseCategory;
 import soict.hedspi.itss2.gyatto.moneysavior.entity.Transaction;
-import soict.hedspi.itss2.gyatto.moneysavior.exception.ApiException;
 import soict.hedspi.itss2.gyatto.moneysavior.exception.ApiExceptionProvider;
 import soict.hedspi.itss2.gyatto.moneysavior.mapper.TransactionMapper;
 import soict.hedspi.itss2.gyatto.moneysavior.repository.ChatHistoryRepository;
@@ -214,14 +212,46 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public SepayWebhookResponse handleSepayWebhook(SepayWebhookRequest request) {
         log.info("Sepay webhook request body: {}", request);
-        var defaultUser = userAccountRepository.findFirstByEmail("nguyenducanh2105@gmail.com");
-        if (defaultUser != null) {
-            var recordTransactionAutoRequest = RecordTransactionAutoRequest.builder()
-                    .userUuid(defaultUser.getUuid())
-                    .message((request.getTransferType().equals("in") ? "nhận được" : "chi tiêu") + ": " + request.getContent() + ", " + request.getTransferAmount() + " VND")
+        var message = (request.getTransferType().equals("in") ? "nhận được" : "chi tiêu") + ": " + request.getContent() + ", " + request.getTransferAmount() + " VND";
+        var users = userAccountRepository.findAll();
+        RecordTransactionResponse response = null;
+
+        for (var user : users) {
+            if (response == null) {
+                var recordTransactionAutoRequest = RecordTransactionAutoRequest.builder()
+                        .userUuid(user.getUuid())
+                        .message(message)
+                        .build();
+                response = recordTransactionAuto(recordTransactionAutoRequest);
+                continue;
+            }
+            var transactionResponse = response.getTransaction();
+            var transaction = Transaction.builder()
+                    .userUuid(user.getUuid())
+                    .type(transactionResponse.getType())
+                    .category(expenseCategoryRepository.findByName(transactionResponse.getCategory()))
+                    .description(transactionResponse.getDescription())
+                    .amount(transactionResponse.getAmount())
                     .build();
-            recordTransactionAuto(recordTransactionAutoRequest);
+            transactionRepository.save(transaction);
+
+            var userChat = ChatHistory.builder()
+                    .userUuid(user.getUuid())
+                    .message(message)
+                    .sender(ChatHistory.Sender.USER)
+                    .transaction(transaction)
+                    .build();
+            chatHistoryRepository.save(userChat);
+
+            var botChat = ChatHistory.builder()
+                    .userUuid(user.getUuid())
+                    .message(response.getComment())
+                    .sender(ChatHistory.Sender.BOT)
+                    .transaction(transaction)
+                    .build();
+            chatHistoryRepository.save(botChat);
         }
+
         return SepayWebhookResponse.builder()
                 .success(true)
                 .build();

@@ -6,4 +6,5 @@ import soict.hedspi.itss2.gyatto.moneysavior.entity.ExpenseCategory;
 
 @Repository
 public interface ExpenseCategoryRepository extends JpaRepository<ExpenseCategory, Long> {
+    ExpenseCategory findByName(String name);
 }
