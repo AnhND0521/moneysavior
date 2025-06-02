@@ -14,7 +14,6 @@ import java.time.LocalDate;
 public class UpdateTransactionRequest {
     @NotNull
     private TransactionType type;
-    @NotEmpty
     private String category;
     @NotEmpty
     private String description;
