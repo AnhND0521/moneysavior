@@ -212,7 +212,9 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public SepayWebhookResponse handleSepayWebhook(SepayWebhookRequest request) {
         log.info("Sepay webhook request body: {}", request);
-        var message = (request.getTransferType().equals("in") ? "nhận được" : "chi tiêu") + ": " + request.getContent() + ", " + request.getTransferAmount() + " VND";
+        var message = request.getTransferType().equals("in") ?
+                "Được chuyển khoản số tiền: %.0f VND với nội dung: '%s'".formatted(request.getTransferAmount(), request.getContent())
+                : "Đã chuyển đi số tiền: %.0f VND với nội dung: '%s'".formatted(request.getTransferAmount(), request.getContent());
         var users = userAccountRepository.findAll();
         RecordTransactionResponse response = null;
 
