@@ -170,11 +170,13 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setDescription(request.getDescription());
         transaction.setAmount(request.getAmount());
         transaction.setDate(request.getDate());
-        var category = expenseCategoryRepository.findAll().stream()
-                .filter(c -> c.getName().equals(request.getCategory()))
-                .findFirst()
-                .orElseThrow(() -> apiExceptionProvider.createCategoryNotFoundException(request.getCategory()));
-        transaction.setCategory(category);
+        if (transaction.getCategory() != null) {
+            var category = expenseCategoryRepository.findAll().stream()
+                    .filter(c -> c.getName().equals(request.getCategory()))
+                    .findFirst()
+                    .orElseThrow(() -> apiExceptionProvider.createCategoryNotFoundException(request.getCategory()));
+            transaction.setCategory(category);
+        }
         transactionRepository.save(transaction);
         return transactionMapper.toTransactionResponse(transaction);
     }
